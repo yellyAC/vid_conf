@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>VidCon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{url_for('static', filename='main.css')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"> </script>
+    <!-- harshie -->
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.1/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.1/face_mesh.js" crossorigin="anonymous"></script>
+    <!-- harshie -->
+</head>
+    <body>
+        <button id="join-btn">Join</button>
+    
+            <div id="stream-wrapper">
+                
+                <video class="input_video" style="visibility: hidden;" height="0px" width="0px"></video>
+                <div id="video-streams"></div>
+
+                <div id="stream-controls">
+                    <button id="leave-btn">Leave Stream</button>
+                    <button id="mic-btn">Mic On</button>
+                    <button id="camera-btn">Camera</button>
+                    <button id="screenshot-btn">Screenshot</button>                   
+                </div>
+            </div>
+            
+            <div id="selfie-cam">
+                <canvas class="output" width="640px" height="480px"></canvas>
+            </div>
+            <div class="control" style="visibility: hidden;"></div>
+
+        <script>    
+            const srcElement = document.getElementById("video-streams"),
+            btns = document.querySelectorAll("button");
+            btns.forEach(btn => { // looping through each btn
+                // adding click event to each btn
+                btn.addEventListener("click", () => {
+                    // creating canvas of element using html2canvas
+                    html2canvas(srcElement).then(canvas => {
+                    // adding canvas/screenshot to the body
+                    if(btn.id === "screenshot-btn") {
+                        const a = document.createElement("a");
+                        a.href = canvas.toDataURL();
+                        a.download = "screenshot.jpg";
+                        a.click();                                   
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ url_for('train') }}",                                                                        
+                            });                              
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+<script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
+<script src="{{url_for('static', filename='main.js')}}"></script>
+</html>
